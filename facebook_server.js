@@ -51,18 +51,17 @@ var getTokenResponse = function (query) {
     // Request an access token, or request access token info if it was already given
     if (query.accessToken) {
       var response = HTTP.get(
-        "https://graph.facebook.com/debug_token", {
+        "https://graph.facebook.com/app", {
           params: {
-            client_id: config.appId,
-            redirect_uri: OAuth._redirectUri('facebook', config),
-            client_secret: OAuth.openSecret(config.secret),
-            input_token: query.accessToken,
             access_token: query.accessToken
           }
         }).content;
       response = JSON.parse(response);
-      responseContent = "access_token=" + query.accessToken + "&expires=" +
-        (response.data.expires_at - response.data.issued_at);
+      if (response.id == config.appId) {
+          responseContent = "access_token=" + query.accessToken + "&expires=5184000";
+      } else {
+      throw new Error("Failed to complete OAuth handshake with Facebook. The access token's app ID and the server's app ID did not match.");
+      }
     } else {
       responseContent = HTTP.get(
         "https://graph.facebook.com/oauth/access_token", {

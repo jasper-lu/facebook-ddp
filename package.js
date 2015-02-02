@@ -1,6 +1,6 @@
 Package.describe({
   name: 'jasperlu:facebook-ddp',
-  version: '0.0.1',
+  version: '0.0.2',
   // Brief, one-line summary of the package.
   summary: "Facebook OAuth flow to include mobile ddp clients",
   // URL to the Git repository containing the source code for this package.
