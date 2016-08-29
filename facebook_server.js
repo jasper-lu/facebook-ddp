@@ -64,7 +64,7 @@ var getTokenResponse = function (query) {
       }
     } else {
       responseContent = HTTP.get(
-        "https://graph.facebook.com/oauth/access_token", {
+        "https://graph.facebook.com/v2.2/oauth/access_token", {
           params: {
             client_id: config.appId,
             redirect_uri: OAuth._redirectUri('facebook', config),
