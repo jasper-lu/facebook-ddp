@@ -50,6 +50,7 @@ var getTokenResponse = function (query) {
   try {
     // Request an access token, or request access token info if it was already given
     if (query.accessToken) {
+      console.log('aaa')
       var response = HTTP.get(
         "https://graph.facebook.com/app", {
           params: {
@@ -63,6 +64,7 @@ var getTokenResponse = function (query) {
       throw new Error("Failed to complete OAuth handshake with Facebook. The access token's app ID and the server's app ID did not match.");
       }
     } else {
+      console.log('bbb')
       responseContent = HTTP.get(
         "https://graph.facebook.com/v2.2/oauth/access_token", {
           params: {
@@ -102,6 +104,7 @@ var getTokenResponse = function (query) {
 
 var getIdentity = function (accessToken, fields) {
   try {
+    console.log('ccc')
     return HTTP.get("https://graph.facebook.com/v2.4/me", {
       params: {
         access_token: accessToken,
