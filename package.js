@@ -1,6 +1,6 @@
 Package.describe({
   name: 'oddup:facebook-ddp',
-  version: '0.0.2',
+  version: '0.0.3',
   // Brief, one-line summary of the package.
   summary: "Facebook OAuth flow to include mobile ddp clients",
   // URL to the Git repository containing the source code for this package.

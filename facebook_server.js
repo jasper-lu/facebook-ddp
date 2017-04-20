@@ -1,7 +1,5 @@
 Facebook = {};
 
-var querystring = Npm.require('querystring');
-
 OAuth.registerService('facebook', 2, null, function(query) {
 
   var response = getTokenResponse(query);
@@ -11,7 +9,7 @@ OAuth.registerService('facebook', 2, null, function(query) {
   // http://developers.facebook.com/docs/reference/login/public-profile-and-friend-list/
   var whitelisted = ['id', 'email', 'name', 'first_name',
       'last_name', 'link', 'gender', 'locale', 'age_range'];
-  
+
   var identity = getIdentity(accessToken, whitelisted);
 
   var serviceData = {
@@ -51,7 +49,7 @@ var getTokenResponse = function (query) {
     // Request an access token, or request access token info if it was already given
     if (query.accessToken) {
       var response = HTTP.get(
-        "https://graph.facebook.com/app", {
+        "https://graph.facebook.com/v2.8/app", {
           params: {
             access_token: query.accessToken
           }
@@ -64,14 +62,14 @@ var getTokenResponse = function (query) {
       }
     } else {
       responseContent = HTTP.get(
-        "https://graph.facebook.com/v2.2/oauth/access_token", {
+        "https://graph.facebook.com/v2.8/oauth/access_token", {
           params: {
             client_id: config.appId,
             redirect_uri: OAuth._redirectUri('facebook', config),
             client_secret: OAuth.openSecret(config.secret),
             code: query.code
           }
-        }).content;
+        }).data;
     }
   } catch (err) {
     throw _.extend(new Error("Failed to complete OAuth handshake with Facebook. " + err.message),
@@ -86,9 +84,8 @@ var getTokenResponse = function (query) {
 
   // Success!  Extract the facebook access token and expiration
   // time from the response
-  var parsedResponse = querystring.parse(responseContent);
-  var fbAccessToken = parsedResponse.access_token;
-  var fbExpires = parsedResponse.expires;
+  var fbAccessToken = responseContent.access_token;
+  var fbExpires = responseContent.expires_in;
 
   if (!fbAccessToken) {
     throw new Error("Failed to complete OAuth handshake with facebook " +
@@ -102,10 +99,10 @@ var getTokenResponse = function (query) {
 
 var getIdentity = function (accessToken, fields) {
   try {
-    return HTTP.get("https://graph.facebook.com/v2.4/me", {
+    return HTTP.get("https://graph.facebook.com/v2.8/me", {
       params: {
         access_token: accessToken,
-        fields: fields
+        fields: fields.join(",")
       }
     }).data;
   } catch (err) {
